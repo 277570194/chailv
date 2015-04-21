@@ -13,21 +13,20 @@ public partial class ValidateUser : Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        String strUnit = "";
         String strDepart = "";
-        String strZhiBie = "";
         String strUserName = "";
         String strPwd = "";
         String strErrorType = "";
+        if (Request["txtUnit"] != null)
+            strUnit = Request["txtUnit"].ToString();
         if (Request["txtDepartment"] != null)
             strDepart = Request["txtDepartment"].ToString();
-        if (Request["txtZhiBie"] != null)
-            strZhiBie = Request["txtZhiBie"].ToString();
         if (Request["username"] != null)
             strUserName = Request["username"].ToString();
         if (Request["password"] != null)
             strPwd = Request["password"].ToString();
-        List<userinfo> objUserList = UserInfoService.GetUserInfo(strDepart,
-                         strZhiBie, strUserName, strPwd, ref strErrorType);
+        List<userinfo> objUserList = UserInfoService.GetUserInfo(strUnit, strDepart, strUserName, strPwd, ref strErrorType);
         switch (strErrorType)
         {
             case "1":
@@ -53,45 +52,13 @@ public partial class ValidateUser : Page
         }
     }
     [WebMethod]
-    public static String GetDepart()
+    public static string GetUnit()
     {
-        String strReturnValue = String.Empty;
-        List<userinfo> UserInfoList = UserInfoService.GetUserInfoList();
-        if (UserInfoList != null && UserInfoList.Count > 0)
-        {
-            var userinfoList = (from user in UserInfoList orderby user.UserUint where user.UserUint != "" select user.UserUint).Distinct();
-            if (userinfoList != null && userinfoList.Count() > 0)
-            {
-                strReturnValue = "[";
-                for (int i = 0; i < userinfoList.Count(); i++)
-                {
-                    strReturnValue = strReturnValue + "{id:'" + userinfoList.ElementAt(i) + "'"
-                        + ",name:'" + userinfoList.ElementAt(i) + "'},";
-                }
-                strReturnValue = strReturnValue.TrimEnd(',') + "]";
-            }
-        }
-        return strReturnValue;
+        return UserInfoService.GetUnit("");
     }
     [WebMethod]
-    public static String GetZhiBie(string strJiGou)
+    public static string GetDepartment(string strUnit)
     {
-        String strReturnValue = String.Empty;
-        List<userinfo> UserInfoList = UserInfoService.GetUserInfoList();
-        if (UserInfoList != null && UserInfoList.Count > 0)
-        {
-            var userinfoList = (from user in UserInfoList orderby user.UserUint where user.UserUint == strJiGou && user.UserDepartment != "" select user.UserDepartment).Distinct();
-            if (userinfoList != null && userinfoList.Count() > 0)
-            {
-                strReturnValue = "[";
-                for (int i = 0; i < userinfoList.Count(); i++)
-                {
-                    strReturnValue = strReturnValue + "{id:'" + userinfoList.ElementAt(i) + "'"
-                        + ",name:'" + userinfoList.ElementAt(i) + "'},";
-                }
-                strReturnValue = strReturnValue.TrimEnd(',') + "]";
-            }
-        }
-        return strReturnValue;
+        return UserInfoService.GetDepartment(strUnit);
     }
 }

@@ -43,10 +43,10 @@
             if (result != "") {
                 if (result.length == 1) {
                     if (result == "1") {
-                        lblErrorMessage.text("必须输入机关.");
+                        lblErrorMessage.text("必须输入单位.");
                     }
                     else if (result == "2") {
-                        lblErrorMessage.text("必须输入职别.");
+                        lblErrorMessage.text("必须输入部门.");
                     }
                     else if (result == "3") {
                         lblErrorMessage.text("必须输入姓名.");
@@ -55,10 +55,10 @@
                         lblErrorMessage.text("姓名不能为空.");
                     }
                     else if (result == "5") {
-                        lblErrorMessage.text("所输入机关不存在,请确认输入.");
+                        lblErrorMessage.text("所输入单位不存在,请确认输入.");
                     }
                     else if (result == "6") {
-                        lblErrorMessage.text("所输入职别不存在,请确认输入.");
+                        lblErrorMessage.text("所输入部门不存在,请确认输入.");
                     }
                     else if (result == "7") {
                         lblErrorMessage.text("此用户不存在,请确认输入.");
@@ -79,32 +79,32 @@
     //获取所有机关
     $.ajax({
         type: "POST",
-        url: "ValidateUser.aspx/GetDepart",
+        url: "ValidateUser.aspx/GetUnit",
         dataType: "json",
         async: true,
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             var dataValues = eval(data.d);
-            $("#txtDepartment").combobox("loadData", dataValues);
+            $("#txtUnit").combobox("loadData", dataValues);
         },
         error: function (err) {
         }
     });
     //添加选择事件,填充所有相关职别
-    $("#txtDepartment").combobox({
+    $("#txtUnit").combobox({
         onSelect: function (n, o) {
             $.ajax({
                 type: "POST",
-                url: "ValidateUser.aspx/GetZhiBie",
+                url: "ValidateUser.aspx/GetDepartment",
                 dataType: "json",
                 async: true,
-                data: "{'strJiGou':'" + n.id + "'}",
+                data: "{'strUnit':'" + n.id + "'}",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
-                    var ddlZhiBie = $("#txtZhiBie");
+                    var ddlDepartment = $("#txtDepartment");
                     var dataValues = eval(data.d);
-                    ddlZhiBie.combobox("loadData", dataValues);
-                    ddlZhiBie.combobox({ disabled: false });
+                    ddlDepartment.combobox("loadData", dataValues);
+                    ddlDepartment.combobox({ disabled: false });
                 },
                 error: function (err) {
                 }

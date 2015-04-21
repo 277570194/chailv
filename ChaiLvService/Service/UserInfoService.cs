@@ -11,7 +11,6 @@ namespace ChaiLvService
 {
     public class UserInfoService
     {
-
         /// <summary>
         /// 用户新增或者修改
         /// </summary>
@@ -66,20 +65,6 @@ namespace ChaiLvService
             }
         }
 
-        public void cc()
-        {
-            userinfo u = new userinfo()
-            {
-                UserID = 9,
-                UserName = "dsad",
-                UserUint = "222",
-                UserDepartment = "111111",
-                UserPwd = "123456",
-                UserRole = "",
-                UserStatus = ""
-            };
-            UserInfoSave(u);
-        }
         /// <summary>
         /// 获取用户信息
         /// </summary>
@@ -88,15 +73,16 @@ namespace ChaiLvService
         {
             using (CLEntities dbContext = new CLEntities())
             {
-                return dbContext.userinfo.Where(u => u.UserStatus != "已删除" 
+                return dbContext.userinfo.Where(u => u.UserStatus != "已删除"
                     && u.UserUint == strUserUint).ToList();
             }
         }
+
         /// <summary>
         /// 获取用户信息
         /// </summary>
         /// <returns></returns>
-        public static List<userinfo> GetUserInfo(String strUserUint, string strZhiBie, 
+        public static List<userinfo> GetUserInfo(String strUserUint, string strDepartment,
         string strUserName, string strPwd, ref string strErrorType)
         {
             List<userinfo> objUserInfoList = new List<userinfo>();
@@ -105,7 +91,7 @@ namespace ChaiLvService
                 strErrorType = "1";//必须选择机关
                 goto ErrorShow;
             }
-            if (String.IsNullOrEmpty(strZhiBie))
+            if (String.IsNullOrEmpty(strDepartment))
             {
                 strErrorType = "2";//必须选择职别
                 goto ErrorShow;
@@ -122,53 +108,105 @@ namespace ChaiLvService
             }
             using (CLEntities dbContext = new CLEntities())
             {
-               objUserInfoList = dbContext.userinfo.Where(u => u.UserStatus != "已删除"
-                    && u.UserUint == strUserUint).ToList();
-               if (objUserInfoList != null && objUserInfoList.Count > 0)
-               {
-                   objUserInfoList = objUserInfoList.Where(u => u.UserDepartment == strZhiBie).ToList();
-                   if (objUserInfoList != null && objUserInfoList.Count > 0)
-                   {
-                       objUserInfoList = objUserInfoList.Where(u => u.UserName == strUserName).ToList();
-                       if (objUserInfoList != null && objUserInfoList.Count > 0)
-                       {
-                           objUserInfoList = objUserInfoList.Where(u => u.UserPwd == CommonCryptoProvider.Encrypt(strPwd)).ToList();
-                           if (objUserInfoList != null && objUserInfoList.Count > 0)
-                           {
-                               strErrorType = "9";
-                               goto ErrorShow;
-                           }
-                           else
-                           {
-                               strErrorType = "8"; //密码输入有误
-                               objUserInfoList = null;
-                               goto ErrorShow;
-                           }
-                       }
-                       else
-                       {
-                           strErrorType = "7"; //用户不存在
-                           objUserInfoList = null;
-                           goto ErrorShow;
-                       }
-                   }
-                   else
-                   {
-                       strErrorType = "6"; //职别不存在
-                       objUserInfoList = null;
-                       goto ErrorShow;
-                   }
-               }
-               else
-               {
-                   strErrorType = "5"; //机关不存在
-                   objUserInfoList = null;
-                   goto ErrorShow;
-               }
+                objUserInfoList = dbContext.userinfo.Where(u => u.UserStatus != "已删除"
+                     && u.UserUint == strUserUint).ToList();
+                if (objUserInfoList != null && objUserInfoList.Count > 0)
+                {
+                    objUserInfoList = objUserInfoList.Where(u => u.UserDepartment == strDepartment).ToList();
+                    if (objUserInfoList != null && objUserInfoList.Count > 0)
+                    {
+                        objUserInfoList = objUserInfoList.Where(u => u.UserName == strUserName).ToList();
+                        if (objUserInfoList != null && objUserInfoList.Count > 0)
+                        {
+                            objUserInfoList = objUserInfoList.Where(u => u.UserPwd == CommonCryptoProvider.Encrypt(strPwd)).ToList();
+                            if (objUserInfoList != null && objUserInfoList.Count > 0)
+                            {
+                                strErrorType = "9";
+                                goto ErrorShow;
+                            }
+                            else
+                            {
+                                strErrorType = "8"; //密码输入有误
+                                objUserInfoList = null;
+                                goto ErrorShow;
+                            }
+                        }
+                        else
+                        {
+                            strErrorType = "7"; //用户不存在
+                            objUserInfoList = null;
+                            goto ErrorShow;
+                        }
+                    }
+                    else
+                    {
+                        strErrorType = "6"; //职别不存在
+                        objUserInfoList = null;
+                        goto ErrorShow;
+                    }
+                }
+                else
+                {
+                    strErrorType = "5"; //机关不存在
+                    objUserInfoList = null;
+                    goto ErrorShow;
+                }
             }
-            ErrorShow:
+        ErrorShow:
 
             return objUserInfoList;
+        }
+
+        /// <summary>
+        ///  获取所有单位
+        /// </summary>
+        /// <param name="strExclude">排除那个单位(如：管理员)</param>
+        /// <returns></returns>
+        public static string GetUnit(string strExclude)
+        {
+            string strReturnValue = String.Empty;
+            List<userinfo> UserInfoList = UserInfoService.GetUserInfoList();
+            if (UserInfoList != null && UserInfoList.Count > 0)
+            {
+                var userinfoList = (from user in UserInfoList orderby user.UserUint where user.UserUint != "" && (strExclude == "" || user.UserUint != strExclude) select user.UserUint).Distinct();
+                if (userinfoList != null && userinfoList.Count() > 0)
+                {
+                    strReturnValue = "[";
+                    for (int i = 0; i < userinfoList.Count(); i++)
+                    {
+                        strReturnValue = strReturnValue + "{id:'" + userinfoList.ElementAt(i) + "'"
+                            + ",name:'" + userinfoList.ElementAt(i) + "'},";
+                    }
+                    strReturnValue = strReturnValue.TrimEnd(',') + "]";
+                }
+            }
+            return strReturnValue;
+        }
+
+        /// <summary>
+        ///  获取对于单位的部门
+        /// </summary>
+        /// <param name="strUnit">单位名称</param>
+        /// <returns></returns>
+        public static string GetDepartment(string strUnit)
+        {
+            string strReturnValue = String.Empty;
+            List<userinfo> UserInfoList = UserInfoService.GetUserInfoList();
+            if (UserInfoList != null && UserInfoList.Count > 0)
+            {
+                var userinfoList = (from user in UserInfoList orderby user.UserUint where user.UserUint == strUnit && user.UserDepartment != "" select user.UserDepartment).Distinct();
+                if (userinfoList != null && userinfoList.Count() > 0)
+                {
+                    strReturnValue = "[";
+                    for (int i = 0; i < userinfoList.Count(); i++)
+                    {
+                        strReturnValue = strReturnValue + "{id:'" + userinfoList.ElementAt(i) + "'"
+                            + ",name:'" + userinfoList.ElementAt(i) + "'},";
+                    }
+                    strReturnValue = strReturnValue.TrimEnd(',') + "]";
+                }
+            }
+            return strReturnValue;
         }
     }
 }
