@@ -65,7 +65,7 @@
                             success: function (data, response, status) {
                                 data = $.parseJSON(data);
                                 $.messager.progress('close');
-                                console.log(data);
+                                //console.log(data);
                                 if (data) {
                                     $.messager.show({
                                         title: '提示',
@@ -202,5 +202,30 @@
                 }
             },
         };
+
+        $('#manager_edit').dialog({
+            onOpen: function () {
+                //获取所有单位
+                $.ajax({
+                    type: "POST",
+                    url: "UserManage.aspx/GetUnit",
+                    dataType: "json",
+                    async: true,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        var umunit = eval(data.d);
+                        console.log(umunit);
+                        $('#userunit').combobox({ valueField: 'id', textField: 'name', });
+                        $('#userunit').combobox("loadData", umunit);
+                        $('#userunit').combobox({}).combo({ panelHeight: 100, });
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        });
+
+
     }
 );

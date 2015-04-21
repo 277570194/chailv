@@ -24,9 +24,9 @@
 <form id="manager_edit" style="margin: 0; padding: 5px 0 0 25px; color: #333;">
     <input type="text" name="userid" class="textbox" style="width: 200px; display: none;">
     <p>用户名：<input type="text" name="username" class="textbox" style="width: 200px;"></p>
-    <p>单  位：<input type="text" name="userunit" class="easyui-combobox" style="width: 200px;"></p>
-    <p>部  门：<input type="text" name="userdepartment" class="easyui-combobox" style="width: 200px;"></p>
-    <p>职  别：<input type="text" name="usergrade" class="easyui-combobox" style="width: 200px;"></p>
+    <p>单&nbsp;位：<input id="userunit" name="userunit" class="easyui-combobox" style="width: 200px;"></p>
+    <p>部&nbsp;门：<input id="userdepartment" name="userdepartment" class="easyui-combobox" style="width: 200px;"></p>
+    <p>职&nbsp;别：<input id="usergrade" name="usergrade" class="easyui-combobox" style="width: 200px;"></p>
 </form>
 
 <script type="text/javascript" src="js/UserManage.js"></script>

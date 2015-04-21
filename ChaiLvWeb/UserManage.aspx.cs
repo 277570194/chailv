@@ -30,5 +30,16 @@ public partial class UserManage : System.Web.UI.Page
         string str = Newtonsoft.Json.JsonConvert.SerializeObject(li);
         return "{\"rows\":" + str + ",\"total\":\"" + UserInfoService.GetUserInfoList().Count + "\"}";
     }
-    
+
+    [WebMethod]
+    public static string GetUnit()
+    {
+        return UserInfoService.GetUnit("");
+    }
+    [WebMethod]
+    public static string GetDepartment(string strUnit)
+    {
+        return UserInfoService.GetDepartment(strUnit);
+    }
+
 }
