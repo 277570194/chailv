@@ -12,16 +12,14 @@ namespace ChaiLvService
     using System;
     using System.Collections.Generic;
     
-    public partial class userinfo
+    public partial class navigationtree
     {
-        public long UserID { get; set; }
-        public string UserName { get; set; }
-        public string UserUint { get; set; }
-        public string UserDepartment { get; set; }
-        public string UserPwd { get; set; }
-        public string UserRole { get; set; }
-        public string UserStatus { get; set; }
-        public int UserRoleID { get; set; }
-        public System.DateTime UserCreateTime { get; set; }
+        public long id { get; set; }
+        public string text { get; set; }
+        public string state { get; set; }
+        public string iconCls { get; set; }
+        public string url { get; set; }
+        public long nid { get; set; }
+        public int RoleID { get; set; }
     }
 }
