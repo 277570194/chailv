@@ -2,15 +2,16 @@
     function () {
         $('#nav').tree({
             lines: true,
-            data: [
-                {
-                    text: '用户管理',
-                    url: 'UserManage'
-                }, {
-                    text: 'ceshi',
-                    url: ''
-                }
-            ],
+            //data: [
+            //    {
+            //        text: '用户管理',
+            //        url: 'UserManage'
+            //    }, {
+            //        text: 'ceshi',
+            //        url: ''
+            //    }
+            //],
+            url: 'BusinessPage.aspx?method=GetNodes',
             onClick: function (node) {
                 //console.log(node);
                 if (node.url) {

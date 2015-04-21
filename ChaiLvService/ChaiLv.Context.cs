@@ -26,5 +26,7 @@ namespace ChaiLvService
         }
     
         public DbSet<userinfo> userinfo { get; set; }
+        public DbSet<loginfo> loginfo { get; set; }
+        public DbSet<navigationtree> navigationtree { get; set; }
     }
 }
