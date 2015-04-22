@@ -14,7 +14,7 @@
 </head>
 <body>
     <form id="myform" style="text-align: center">
-        <table border="0" style="padding-left: 25%; padding-top: 10px; line-height: 27px">
+        <table border="0" style="padding-left: 25%; padding-top: 10px; line-height: 20px">
             <tr>
                 <td style="text-align: right">申请人：
                 </td>
@@ -30,13 +30,13 @@
             <tr>
                 <td style="text-align: right">出差地点：</td>
                 <td style="text-align: left">
-                    <input type="text" name="txtUsername" class="easyui-validatebox textbox" required="true" missingmessage="请输入出差地点!" /></td>
+                    <input type="text" name="txtPlace" class="easyui-validatebox textbox" required="true" missingmessage="请输入出差地点!" /></td>
             </tr>
             <tr>
                 <td style="text-align: right">出差类型：</td>
                 <td style="text-align: left">
-                   <%-- <input id="ddlType" name="ddlType" class="easyui-combobox" required="true" editable="false" valuefield="id" textfield="name" missingmessage="请选择出差类型!" />--%>
-                    <select id="ddlChuChaiType" class="easyui-combobox"  editable="false"  name="ddlChuChaiType" required="true" missingmessage="请选择出差类型!" style="width: 139px;">
+                    <%-- <input id="ddlType" name="ddlType" class="easyui-combobox" required="true" editable="false" valuefield="id" textfield="name" missingmessage="请选择出差类型!" />--%>
+                    <select id="ddlChuChaiType" class="easyui-combobox" editable="false" name="ddlChuChaiType" required="true" missingmessage="请选择出差类型!" style="width: 139px;">
                         <option></option>
                         <option value="会议">会议</option>
                         <option value="维护">维护</option>
@@ -58,9 +58,27 @@
                     <input type="text" id="txtDays" name="txtDays" class="easyui-numberbox textbox" required="true" missingmessage="请输入出差天数!" /></td>
             </tr>
             <tr>
+                <td style="text-align: right">是否在朋友家住宿：</td>
+                <td style="text-align: left">是<input type="radio" checked="checked" name="radStay" value="是" />
+                    否<input type="radio" name="radStay" value="否" />
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right">是否在单位就餐：</td>
+                <td style="text-align: left">是<input type="radio" checked="checked" name="radEat" value="是" />
+                    否<input type="radio" name="radEat" value="否" />
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right">是否安排食宿：</td>
+                <td style="text-align: left">是<input type="radio" checked="checked" name="radRoomEat" value="是" />
+                    否<input type="radio" name="radRoomEat" value="否" />
+                </td>
+            </tr>
+            <tr>
                 <td style="text-align: right">交通工具：</td>
                 <td style="text-align: left">
-                    <select id="ddlJiaoTong" class="easyui-combobox"  editable="false"  name="ddlJiaoTong" required="true" missingmessage="请选择交通工具!" style="width: 139px;">
+                    <select id="ddlJiaoTong" class="easyui-combobox" editable="false" name="ddlJiaoTong" required="true" missingmessage="请选择交通工具!" style="width: 139px;">
                         <option></option>
                         <option value="火车">火车</option>
                         <option value="汽车">汽车</option>
@@ -73,7 +91,7 @@
                 <td style="text-align: right">出差目的：</td>
                 <td colspan="3" style="text-align: left">
                     <%--<input type="text" id="txtDescription" name="txtDescription" multiline="true" class="easyui-validatebox textbox" style="width: 300px; height: 100px" required="true" missingmessage="请输入出差天数目的!" />--%>
-                    <textarea id="txtDescription" name="txtDescription" style="width: 300px; height: 100px; border: 1px solid #95B8E7; border-radius: 5px" /></textarea>
+                    <textarea id="txtDescription" name="txtDescription" style="width: 300px; height: 80px; border: 1px solid #95B8E7; border-radius: 5px" /></textarea>
                 </td>
 
             </tr>
