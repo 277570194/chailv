@@ -22,13 +22,13 @@
                     <tr>
                         <td align="right">单&nbsp;&nbsp;位:</td>
                         <td align="center">
-                            <input name="txtUnit" id="txtUnit" class="easyui-combobox" editable="false" required="true" valuefield="id" textfield="name" missingmessage="请选择机关!" />
+                            <input name="txtUnit" id="txtUnit" class="easyui-combobox" editable="false" required="true" valuefield="id" textfield="name" missingmessage="请选择单位!" />
                         </td>
                     </tr>
                     <tr>
                         <td align="right">部&nbsp;&nbsp;门:</td>
                         <td align="center">
-                            <input id="txtDepartment" name="txtDepartment" class="easyui-combobox" required="true" editable="false" valuefield="id" disabled="disabled" textfield="name" missingmessage="请选择职别!" />
+                            <input id="txtDepartment" name="txtDepartment" class="easyui-combobox" required="true" editable="false" valuefield="id" disabled="disabled" textfield="name" missingmessage="请选择部门!" />
                         </td>
                     </tr>
                     <tr>
