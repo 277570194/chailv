@@ -102,7 +102,9 @@
 
         manage_tool = {
             add: function () {
+                $('#manager_edit').dialog({title:"添加用户"});
                 $('#manager_edit').dialog('open');
+
                 $('input[name="username"]').focus();
             },
             edit: function () {
