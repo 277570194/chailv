@@ -139,7 +139,7 @@ namespace ChaiLvService.Security
         /// <returns>Normal string</returns>
         public static String FromHex16String(String inputString)
         {
-            if (inputString == null || inputString == "")
+            if (string.IsNullOrEmpty(inputString))
                 return String.Empty;
 
             Byte[] inputs = new Byte[inputString.Length / 2];
@@ -159,7 +159,7 @@ namespace ChaiLvService.Security
         /// <returns>Hex16 string</returns>
         public static String ToHex16String(this String inputString)
         {
-            if (inputString == null || inputString == "")
+            if (string.IsNullOrEmpty(inputString))
                 return String.Empty;
 
             Byte[] inputs = Encoding.Default.GetBytes(inputString);
