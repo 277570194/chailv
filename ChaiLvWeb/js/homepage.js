@@ -2,15 +2,6 @@
     function () {
         $('#nav').tree({
             lines: true,
-            //data: [
-            //    {
-            //        text: '用户管理',
-            //        url: 'UserManage'
-            //    }, {
-            //        text: 'ceshi',
-            //        url: ''
-            //    }
-            //],
             url: 'BusinessPage.aspx?method=GetNodes',
             onClick: function (node) {
                 //console.log(node);
@@ -25,6 +16,15 @@
                             href: node.url + '.aspx',
                         });
                     }
+                }
+            },
+            onLoadSuccess: function (node, data) {
+                if (data) {
+                    $(data).each(function (index, value) {
+                        if (this.state == 'closed') {
+                            $('#nav').tree('expandAll');
+                        }
+                    });
                 }
             }
         });

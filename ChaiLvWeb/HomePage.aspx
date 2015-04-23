@@ -17,7 +17,7 @@
 
 <body class="easyui-layout">
     <div data-options="region:'north'" style="height: 60px; background: #eee;">
-        <div class="logo">XX管理</div>
+        <div class="logo">差旅报销管理系统</div>
         <div class="logout">您好，<%=((userinfo)Session[SessionKeys.UserInfo]).UserName %>  | <a href="#" onclick="Logout();">退出</a></div>
 
     </div>
@@ -31,7 +31,7 @@
     <div data-options="region:'center'" style="overflow: hidden;">
         <div id="tabs">
             <div title="起始页" style="padding: 0 10px; display: block;">
-                欢迎来到XX管理系统！
+                欢迎来到差旅报销管理系统！
             </div>
         </div>
     </div>
