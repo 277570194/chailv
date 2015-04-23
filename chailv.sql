@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50623
 File Encoding         : 65001
 
-Date: 2015-04-23 10:49:50
+Date: 2015-04-23 19:40:13
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -47,7 +47,7 @@ CREATE TABLE `navigationtree` (
   `nid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '节点',
   `RoleID` int(11) NOT NULL DEFAULT '1' COMMENT '角色ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of navigationtree
@@ -64,6 +64,7 @@ INSERT INTO `navigationtree` VALUES ('10', '我的菜单', 'closed', '', '', '0'
 INSERT INTO `navigationtree` VALUES ('11', '申请出差', 'open', '', 'CLRequest', '10', '2');
 INSERT INTO `navigationtree` VALUES ('12', '出差写实', 'open', '', 'CLReally', '10', '2');
 INSERT INTO `navigationtree` VALUES ('13', '申请报销', 'open', '', '', '10', '2');
+INSERT INTO `navigationtree` VALUES ('14', '站点管理', 'open', '', '', '1', '0');
 
 -- ----------------------------
 -- Table structure for userinfo
