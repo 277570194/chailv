@@ -13,23 +13,7 @@ public partial class UserManage : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
 
-    }
-    [WebMethod]
-    public static string GetUserListPage(int rows, int page)
-    {
-        //int page = Convert.ToInt32(context.Request["page"]);
-        //int rows = Convert.ToInt32(context.Request["rows"]);
-
-        List<userinfo> li = UserInfoService.GetUserInfoListPage(rows, page);
-
-        //ReturnDate rd = new ReturnDate();
-        //rd.total = UserInfoService.GetUserInfoList().Count.ToString();
-        //rd.rows = li;
-        //DataContractJsonSerializer json = new DataContractJsonSerializer(rd.GetType());
-        //json.WriteObject(context.Response.OutputStream, rd); 
-        string str = Newtonsoft.Json.JsonConvert.SerializeObject(li);
-        return "{\"rows\":" + str + ",\"total\":\"" + UserInfoService.GetUserInfoList().Count + "\"}";
-    }
+    } 
 
     [WebMethod]
     public static string GetUnit()
@@ -42,4 +26,9 @@ public partial class UserManage : System.Web.UI.Page
         return UserInfoService.GetDepartment(strUnit);
     }
 
+    [WebMethod]
+    public static string GetGrade(string strUnit)
+    {
+        return UserInfoService.GetGrade(strUnit);
+    }
 }

@@ -28,7 +28,7 @@
                     <tr>
                         <td align="right">部&nbsp;&nbsp;门:</td>
                         <td align="center">
-                            <input id="txtDepartment" name="txtDepartment" class="easyui-combobox" required="true" editable="false" valuefield="id" disabled="disabled" textfield="name" missingmessage="请选择职别!" />
+                            <input id="txtDepartment" name="txtDepartment" class="easyui-combobox" required="true" editable="false" valuefield="id" textfield="name" missingmessage="请选择职别!" />
                         </td>
                     </tr>
                     <tr>

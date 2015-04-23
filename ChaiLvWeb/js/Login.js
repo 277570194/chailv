@@ -86,10 +86,13 @@
         success: function (data) {
             var dataValues = eval(data.d);
             $("#txtUnit").combobox("loadData", dataValues);
+            $("#txtUnit").combobox("setText", "请选择");
+            $("#txtDepartment").combobox("setText", "请选择");
         },
         error: function (err) {
         }
     });
+
     //添加选择事件,填充所有相关职别
     $("#txtUnit").combobox({
         onSelect: function (n, o) {
@@ -104,11 +107,13 @@
                     var ddlDepartment = $("#txtDepartment");
                     var dataValues = eval(data.d);
                     ddlDepartment.combobox("loadData", dataValues);
-                    ddlDepartment.combobox({ disabled: false });
+                    ddlDepartment.combobox("setText", "请选择");
+                    //ddlDepartment.combobox({ disabled: false });
                 },
                 error: function (err) {
                 }
             });
         }
-    }); 
+    });
+
 })

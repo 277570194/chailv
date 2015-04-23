@@ -56,11 +56,16 @@ namespace ChaiLvService
                 return dbContext.userinfo.Where(u => u.UserStatus != "已删除").ToList();
             }
         }
-        public static List<userinfo> GetUserInfoListPage(int pageSize, int pageNum)
+        public static List<userinfo> GetUserInfoListPage(int pageSize, int pageNum, string userName, string unit, string department, string grade)
         {
             using (CLEntities dbContext = new CLEntities())
             {
-                List<userinfo> list = dbContext.userinfo.Where(u => u.UserStatus != "已删除").OrderBy(u => u.UserID).Take(pageSize * pageNum).Skip(pageSize * (pageNum - 1)).ToList();
+                List<userinfo> list = dbContext.userinfo.Where(u => u.UserStatus != "已删除"
+                    && (userName == "" || (userName != "" && u.UserName.IndexOf(userName) > -1))
+                    && (unit == "" || (unit != "" && u.UserUint == unit))
+                    && (department == "" || (department != "" && u.UserDepartment == department))
+                    && (grade == "" || (grade != "" && u.UserRole == grade))
+                    ).OrderBy(u => u.UserID).Take(pageSize * pageNum).Skip(pageSize * (pageNum - 1)).ToList();
                 return list;
             }
         }
@@ -75,6 +80,19 @@ namespace ChaiLvService
             {
                 return dbContext.userinfo.Where(u => u.UserStatus != "已删除"
                     && u.UserUint == strUserUint).ToList();
+            }
+        }
+
+        /// <summary>
+        /// 根据用户ID查询用户
+        /// </summary>
+        /// <param name="intUserID">用户ID</param>
+        /// <returns>用户对象</returns>
+        public static userinfo GetUserInfo(int intUserID)
+        {
+            using (CLEntities dbContext = new CLEntities())
+            {
+                return dbContext.userinfo.First(u => u.UserID == intUserID);
             }
         }
 
@@ -168,43 +186,89 @@ namespace ChaiLvService
             List<userinfo> UserInfoList = UserInfoService.GetUserInfoList();
             if (UserInfoList != null && UserInfoList.Count > 0)
             {
-                var userinfoList = (from user in UserInfoList orderby user.UserUint where user.UserUint != "" && (strExclude == "" || user.UserUint != strExclude) select user.UserUint).Distinct();
-                if (userinfoList != null && userinfoList.Count() > 0)
+                var userinfoList = (from user in UserInfoList
+                                    orderby user.UserUint
+                                    where user.UserUint != ""
+                                        && (strExclude == "" || user.UserUint != strExclude)
+                                    select user.UserUint).Distinct();
+                strReturnValue = "[";
+                strReturnValue += "{id:'　',name:'　'},";
+                List<string> enumerable = userinfoList as List<string> ?? userinfoList.ToList();
+                if (enumerable.Any())
                 {
-                    strReturnValue = "[";
-                    for (int i = 0; i < userinfoList.Count(); i++)
+                    for (int i = 0; i < enumerable.Count(); i++)
                     {
-                        strReturnValue = strReturnValue + "{id:'" + userinfoList.ElementAt(i) + "'"
-                            + ",name:'" + userinfoList.ElementAt(i) + "'},";
+                        strReturnValue = strReturnValue + "{id:'" + enumerable.ElementAt(i) + "'"
+                            + ",name:'" + enumerable.ElementAt(i) + "'},";
                     }
-                    strReturnValue = strReturnValue.TrimEnd(',') + "]";
                 }
+                strReturnValue = strReturnValue.TrimEnd(',') + "]";
             }
             return strReturnValue;
         }
 
         /// <summary>
-        ///  获取对于单位的部门
+        ///  获取对应单位的部门
         /// </summary>
         /// <param name="strUnit">单位名称</param>
         /// <returns></returns>
         public static string GetDepartment(string strUnit)
         {
             string strReturnValue = String.Empty;
-            List<userinfo> UserInfoList = UserInfoService.GetUserInfoList();
-            if (UserInfoList != null && UserInfoList.Count > 0)
+            List<userinfo> userInfoList = UserInfoService.GetUserInfoList();
+            if (userInfoList != null && userInfoList.Count > 0)
             {
-                var userinfoList = (from user in UserInfoList orderby user.UserUint where user.UserUint == strUnit && user.UserDepartment != "" select user.UserDepartment).Distinct();
-                if (userinfoList != null && userinfoList.Count() > 0)
+                var userinfoList = (from user in userInfoList
+                                    orderby user.UserUint
+                                    where user.UserUint == strUnit
+                                        && user.UserDepartment != ""
+                                    select user.UserDepartment).Distinct();
+                List<string> enumerable = userinfoList as List<string> ?? userinfoList.ToList();
+                strReturnValue = "[";
+                strReturnValue += "{id:'　',name:'　'},";
+                if (enumerable.Any())
                 {
-                    strReturnValue = "[";
-                    for (int i = 0; i < userinfoList.Count(); i++)
+                    for (int i = 0; i < enumerable.Count(); i++)
                     {
-                        strReturnValue = strReturnValue + "{id:'" + userinfoList.ElementAt(i) + "'"
-                            + ",name:'" + userinfoList.ElementAt(i) + "'},";
+                        strReturnValue = strReturnValue + "{id:'" + enumerable.ElementAt(i) + "'"
+                            + ",name:'" + enumerable.ElementAt(i) + "'},";
                     }
-                    strReturnValue = strReturnValue.TrimEnd(',') + "]";
                 }
+
+                strReturnValue = strReturnValue.TrimEnd(',') + "]";
+            }
+            return strReturnValue;
+        }
+
+        /// <summary>
+        /// 获取对应单位，部门的职别
+        /// </summary>
+        /// <param name="strUnit"></param>
+        /// <param name="strDpmt"></param>
+        /// <returns></returns>
+        public static string GetGrade(string strUnit)
+        {
+            string strReturnValue = String.Empty;
+            List<userinfo> userInfoList = UserInfoService.GetUserInfoList();
+            if (userInfoList != null && userInfoList.Count > 0)
+            {
+                var userinfoList = (from user in userInfoList
+                                    orderby user.UserUint, user.UserDepartment
+                                    where user.UserUint == strUnit
+                                        && user.UserRole != ""
+                                    select user.UserRole).Distinct();
+                strReturnValue = "[";
+                strReturnValue += "{id:'　',name:'　'},";
+                List<string> enumerable = userinfoList as List<string> ?? userinfoList.ToList();
+                if (enumerable.Any())
+                {
+                    for (int i = 0; i < enumerable.Count(); i++)
+                    {
+                        strReturnValue = strReturnValue + "{id:'" + enumerable.ElementAt(i) + "'" + ",name:'" +
+                                         enumerable.ElementAt(i) + "'},";
+                    }
+                }
+                strReturnValue = strReturnValue.TrimEnd(',') + "]";
             }
             return strReturnValue;
         }

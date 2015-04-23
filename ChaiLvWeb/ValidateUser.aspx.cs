@@ -54,11 +54,11 @@ public partial class ValidateUser : Page
     [WebMethod]
     public static string GetUnit()
     {
-        return UserInfoService.GetUnit("");
+        return UserInfoService.GetUnit("").Replace("　", "请选择");
     }
     [WebMethod]
     public static string GetDepartment(string strUnit)
     {
-        return UserInfoService.GetDepartment(strUnit);
+        return UserInfoService.GetDepartment(strUnit).Replace("　", "请选择"); ;
     }
 }

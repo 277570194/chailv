@@ -7,8 +7,10 @@
             rownumbers: true,
             border: false,
             pagination: true,
-            pageSize: 5,
-            pageList: [5, 10, 15, 20, 25],
+            striped: true,
+            singleSelect: true,
+            pageSize: 10,
+            pageList: [10, 20, 30, 50],
             pageNumber: 1,
             idField: 'UserID',
             queryParams: { mode: 'Qry' },
@@ -17,7 +19,7 @@
             {
                 field: 'UserID',
                 title: '编号',
-                width: 10,
+                width: 15,
                 //checkbox: true,
             }, {
                 field: 'UserName',
@@ -30,6 +32,10 @@
             }, {
                 field: 'UserDepartment',
                 title: '部门',
+                width: 100,
+            }, {
+                field: 'UserRole',
+                title: '职别',
                 width: 100,
             }
             ]],
@@ -54,8 +60,9 @@
                                 mode: 'Edit',
                                 userid: $('input[name="userid"]').val(),
                                 username: $('input[name="username"]').val(),
-                                userunit: $('input[name="userunit"]').val(),
-                                userdepartment: $('input[name="userdepartment"]').val(),
+                                userunit: $('#userunit').combobox("getText"),
+                                userdepartment: $('#userdepartment').combobox("getText"),
+                                usergrade: $('#usergrade').combobox("getText"),
                             },
                             beforeSend: function () {
                                 $.messager.progress({
@@ -88,8 +95,10 @@
                     $('#manager_edit').dialog('close').form('reset');
                 },
             }],
+            onClose: function () {
+                $('#manager_edit').form('reset');
+            },
         });
-
 
         manage_tool = {
             add: function () {
@@ -118,13 +127,49 @@
 
                             if (data) {
                                 var obj = $.parseJSON(data);
+
                                 $('#manager_edit').form('load', {
                                     userid: obj.UserID,
                                     username: obj.UserName,
-                                    userunit: obj.UserUint,
-                                    userdepartment: obj.UserDepartment
+                                    //userunit: obj.UserUint,
+                                    //userdepartment: obj.UserDepartment
                                 }).dialog('open');
+                                var ddlDepartment = $('#userdepartment');
+                                var ddlGrade = $('#usergrade');
+                                $.ajax({
+                                    type: "POST",
+                                    url: "UserManage.aspx/GetDepartment",
+                                    dataType: "json",
+                                    async: true,
+                                    data: "{'strUnit':'" + obj.UserUint + "'}",
+                                    contentType: "application/json; charset=utf-8",
+                                    success: function (data1) {
+                                        var dataValues = eval(data1.d);
+                                        ddlDepartment.combobox("loadData", dataValues);
+                                    },
+                                    error: function (err) {
+                                        console.log(err);
+                                    }
+                                });
+                                $.ajax({
+                                    type: "POST",
+                                    url: "UserManage.aspx/GetGrade",
+                                    dataType: "json",
+                                    async: true,
+                                    data: "{'strUnit':'" + obj.UserUint + "'}",
+                                    contentType: "application/json; charset=utf-8",
+                                    success: function (data1) {
+                                        var dataValues = eval(data1.d);
+                                        ddlGrade.combobox("loadData", dataValues);
+                                    },
+                                    error: function (err) {
+                                        console.log(err);
+                                    }
+                                });
 
+                                $('#userunit').combobox("setValue", obj.UserUint);
+                                ddlDepartment.combobox("setValue", obj.UserDepartment);
+                                ddlGrade.combobox("setValue", obj.UserRole);
                                 ////分配权限
                                 //$('#auth_edit').combotree({
                                 //    url: 'nav.php',
@@ -201,31 +246,178 @@
                     $.messager.alert('提示', '请选择要删除的记录！', 'info');
                 }
             },
-        };
+            reset: function () {
+                var rows = $('#gv_UserManage').datagrid('getSelections');
+                if (rows.length > 1) {
+                    $.messager.alert('警告操作！', '一次只能选定一条记录！', 'warning');
+                } else if (rows.length == 1) {
+                    $.messager.confirm('确定操作', '您确定要重置该用户密码吗？', function (flag) {
+                        if (flag) {
+                            $.ajax({
+                                type: 'POST',
+                                url: 'Service/UserManage.ashx',
+                                data: {
+                                    mode: 'ResetPwd',
+                                    userid: rows[0].UserID,
+                                },
+                                beforeSend: function () {
+                                    $('#gv_UserManage').datagrid('loading');
+                                },
+                                success: function (data) {
+                                    if (data) {
+                                        data = $.parseJSON(data);
+                                        //console.log(data);
+                                        $('#gv_UserManage').datagrid('loaded');
+                                        $('#gv_UserManage').datagrid('load');
+                                        $('#gv_UserManage').datagrid('unselectAll');
+                                        $.messager.show({
+                                            title: '提示',
+                                            msg: data.UserName + ' 密码重置成功！',
+                                        });
+                                    }
+                                },
+                            });
+                        }
+                    });
+                } else if (rows.length == 0) {
+                    $.messager.alert('警告操作！', '编辑记录至少选定一条数据！', 'warning');
+                }
 
-        $('#manager_edit').dialog({
-            onOpen: function () {
-                //获取所有单位
-                $.ajax({
-                    type: "POST",
-                    url: "UserManage.aspx/GetUnit",
-                    dataType: "json",
-                    async: true,
-                    contentType: "application/json; charset=utf-8",
-                    success: function (data) {
-                        var umunit = eval(data.d);
-                        console.log(umunit);
-                        $('#userunit').combobox({ valueField: 'id', textField: 'name', });
-                        $('#userunit').combobox("loadData", umunit);
-                        $('#userunit').combobox({}).combo({ panelHeight: 100, });
-                    },
-                    error: function (err) {
-                        console.log(err);
-                    }
+            },
+            resetquery: function () {
+                $('#search_username').val("");
+                $('#search_userunit').combobox("setText", "　");
+                $("#search_userdepartment").combobox("setText", "　");
+                $("#search_usergrade").combobox("setText", "　");
+            },
+            search: function () {
+                $('#gv_UserManage').datagrid('load', {
+                    mode: 'Qry',
+                    username: $('#search_username').val(),
+                    userunit: $('#search_userunit').combobox("getText"),
+                    userdpm: $("#search_userdepartment").combobox("getText"),
+                    usergrade: $("#search_usergrade").combobox("getText"),
                 });
             }
+        };
+
+        //获取所有单位，部门，职别
+        $.ajax({
+            type: "POST",
+            url: "UserManage.aspx/GetUnit",
+            dataType: "json",
+            async: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                //#region 编辑窗口下拉
+                var umunit = eval(data.d);
+                var ddlUnit = $('#userunit');
+                var ddlDepartment = $("#userdepartment");
+                var ddlGrade = $("#usergrade");
+
+                ddlGrade.combobox({ valueField: 'id', textField: 'name', editable: true, }).combo({ panelHeight: 100, });
+                ddlDepartment.combobox({ valueField: 'id', textField: 'name', }).combo({ panelHeight: 100, });
+                ddlUnit.combobox({
+                    valueField: 'id', textField: 'name',
+                    onSelect: function (n) {
+                        ddlDepartment.combobox("setValue", "");
+                        ddlGrade.combobox("setValue", "");
+                        $.ajax({
+                            type: "POST",
+                            url: "UserManage.aspx/GetDepartment",
+                            dataType: "json",
+                            async: true,
+                            data: "{'strUnit':'" + n.id + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            success: function (data1) {
+                                var dataValues = eval(data1.d);
+                                ddlDepartment.combobox("loadData", dataValues);
+                                ddlDepartment.combobox("setText", "　");
+                            },
+                            error: function (err) {
+                                console.log(err);
+                            }
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: "UserManage.aspx/GetGrade",
+                            dataType: "json",
+                            async: true,
+                            data: "{'strUnit':'" + n.id + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            success: function (data1) {
+                                var dataValues = eval(data1.d);
+                                ddlGrade.combobox("loadData", dataValues);
+                                ddlGrade.combobox("setText", "　");
+                            },
+                            error: function (err) {
+                                console.log(err);
+                            }
+                        });
+                    },
+                });
+                ddlUnit.combobox("loadData", umunit).combo({ panelHeight: 100, });
+                ddlUnit.combobox("setText", "　");
+                ddlDepartment.combobox("setText", "　");
+                ddlGrade.combobox("setText", "　");
+                //#endregion 
+
+                //region 查询下拉
+                var ddlSearchUnit = $('#search_userunit');
+                var ddlSearchDepartment = $("#search_userdepartment");
+                var ddlSearchGrade = $("#search_usergrade");
+
+                ddlSearchGrade.combobox({ valueField: 'id', textField: 'name', editable: false, }).combo({ panelHeight: 100, });
+                ddlSearchDepartment.combobox({ valueField: 'id', textField: 'name', editable: false, }).combo({ panelHeight: 100, });
+                ddlSearchUnit.combobox({
+                    valueField: 'id', textField: 'name', editable: false,
+                    onSelect: function (n) {
+                        ddlSearchDepartment.combobox("setValue", "");
+                        ddlSearchGrade.combobox("setValue", "");
+                        $.ajax({
+                            type: "POST",
+                            url: "UserManage.aspx/GetDepartment",
+                            dataType: "json",
+                            async: true,
+                            data: "{'strUnit':'" + n.id + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            success: function (data1) {
+                                var dataValues = eval(data1.d);
+                                ddlSearchDepartment.combobox("loadData", dataValues);
+                                ddlSearchDepartment.combobox("setText", "　");
+                            },
+                            error: function (err) {
+                                console.log(err);
+                            }
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: "UserManage.aspx/GetGrade",
+                            dataType: "json",
+                            async: true,
+                            data: "{'strUnit':'" + $('#search_userunit').combobox("getValue") + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            success: function (data1) {
+                                var dataValues = eval(data1.d);
+                                ddlSearchGrade.combobox("loadData", dataValues);
+                                ddlSearchGrade.combobox("setText", "　");
+                            },
+                            error: function (err) {
+                                console.log(err);
+                            }
+                        });
+                    },
+                });
+                ddlSearchUnit.combobox("loadData", umunit).combo({ panelHeight: 100, });
+
+                ddlSearchUnit.combobox("setText", "　");
+                ddlSearchDepartment.combobox("setText", "　");
+                ddlSearchGrade.combobox("setText", "　");
+                //endregion
+            },
+            error: function (err) {
+                console.log(err);
+            }
         });
-
-
     }
 );
