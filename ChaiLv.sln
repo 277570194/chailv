@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ChaiLvWeb", "http://localhost:1215", "{CDDBDC8F-AF69-4F6F-A2BF-783F737E3436}"
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "true"
