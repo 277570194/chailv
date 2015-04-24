@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,11 +72,12 @@ namespace ChaiLvService.Service
         public static bool DataDictionaryDelete(int intDataDicID)
         {
             using (CLEntities dbContext = new CLEntities())
-            {
+            { 
                 try
                 {
                     DataDictionary d = dbContext.datadictionary.FirstOrDefault(d1 => d1.DataDictionaryID == intDataDicID);
                     dbContext.datadictionary.Remove(d);
+                    dbContext.SaveChanges();
                     return true;
                 }
                 catch (Exception)
@@ -83,6 +85,17 @@ namespace ChaiLvService.Service
                     return false;
                 }
 
+            }
+        }
+
+        /// <summary> 获取所有DataDictionary类型 </summary>
+        /// <returns>返回DataDictionary类型结合</returns>
+        public static List<string> GetDataDicAllType()
+        {
+            using (CLEntities dbContext = new CLEntities())
+            {
+                List<string> list = dbContext.datadictionary.Select(d => d.DataDictionaryType).Distinct().ToList();
+                return list;
             }
         }
     }
