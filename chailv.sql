@@ -10,10 +10,31 @@ Target Server Type    : MYSQL
 Target Server Version : 50623
 File Encoding         : 65001
 
-Date: 2015-04-23 19:40:13
+Date: 2015-04-24 23:37:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for datadictionary
+-- ----------------------------
+DROP TABLE IF EXISTS `datadictionary`;
+CREATE TABLE `datadictionary` (
+  `DataDictionaryID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '数据字典ID',
+  `DataDictionaryType` char(100) NOT NULL DEFAULT '' COMMENT '数据字典类型',
+  `DataDictionaryValue` char(255) NOT NULL DEFAULT '' COMMENT '数据字典值',
+  `DataDictionaryDesc` char(255) DEFAULT NULL COMMENT '数据字典描述',
+  PRIMARY KEY (`DataDictionaryID`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of datadictionary
+-- ----------------------------
+INSERT INTO `datadictionary` VALUES ('1', '管内站点', '西安', '西安站');
+INSERT INTO `datadictionary` VALUES ('2', '管外站点', '榆林', '榆林站');
+INSERT INTO `datadictionary` VALUES ('4', '管内站点', '蒲城东', '蒲城东站');
+INSERT INTO `datadictionary` VALUES ('6', '管内站点', '潼关', '潼关站');
+INSERT INTO `datadictionary` VALUES ('11', '管内站点', '蒲城', '蒲城县');
 
 -- ----------------------------
 -- Table structure for loginfo
@@ -64,7 +85,7 @@ INSERT INTO `navigationtree` VALUES ('10', '我的菜单', 'closed', '', '', '0'
 INSERT INTO `navigationtree` VALUES ('11', '申请出差', 'open', '', 'CLRequest', '10', '2');
 INSERT INTO `navigationtree` VALUES ('12', '出差写实', 'open', '', 'CLReally', '10', '2');
 INSERT INTO `navigationtree` VALUES ('13', '申请报销', 'open', '', '', '10', '2');
-INSERT INTO `navigationtree` VALUES ('14', '站点管理', 'open', '', '', '1', '0');
+INSERT INTO `navigationtree` VALUES ('14', '基础数据管理', 'open', '', 'BaseDataManage', '1', '0');
 
 -- ----------------------------
 -- Table structure for userinfo
@@ -81,7 +102,7 @@ CREATE TABLE `userinfo` (
   `UserCreateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户创建时间',
   `UserRoleID` int(11) NOT NULL DEFAULT '1' COMMENT '用户角色ID',
   PRIMARY KEY (`UserID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of userinfo
@@ -92,3 +113,4 @@ INSERT INTO `userinfo` VALUES ('3', '李四', '机关', '部门1', '615246796A71
 INSERT INTO `userinfo` VALUES ('4', '王五', '车间', '车间部门1', '615246796A71502B704B303D', '车间一般干部', '正常', '2015-04-23 09:11:12', '2');
 INSERT INTO `userinfo` VALUES ('5', '赵六', '车间', '车间部门2', '615246796A71502B704B303D', '车间主任', '正常', '2015-04-23 09:12:29', '1');
 INSERT INTO `userinfo` VALUES ('6', '五四六', '机关', '部门2', '615246796A71502B704B303D', '纪委书记', '正常', '2015-04-23 09:49:35', '2');
+INSERT INTO `userinfo` VALUES ('7', '二三四', '车间', '车间部门2', '615246796A71502B704B303D', '车间副主任', '正常', '2015-04-23 20:10:19', '2');
