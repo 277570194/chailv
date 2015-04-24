@@ -4,32 +4,36 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="CLModel.Store" Alias="Self" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.6" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityContainer Name="CLModelStoreContainer">
-          <EntitySet Name="loginfo" EntityType="CLModel.Store.loginfo" store:Type="Tables" Schema="chailv" />
-          <EntitySet Name="navigationtree" EntityType="CLModel.Store.navigationtree" store:Type="Tables" Schema="chailv" />
-          <EntitySet Name="userinfo" EntityType="CLModel.Store.userinfo" store:Type="Tables" Schema="chailv" />
-        </EntityContainer>
+    <Schema Namespace="CLModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.6" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="datadictionary">
+          <Key>
+            <PropertyRef Name="DataDictionaryID" />
+          </Key>
+          <Property Name="DataDictionaryID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DataDictionaryType" Type="char" MaxLength="100" Nullable="false" />
+          <Property Name="DataDictionaryValue" Type="char" MaxLength="255" Nullable="false" />
+          <Property Name="DataDictionaryDesc" Type="char" MaxLength="255" />
+        </EntityType>
         <EntityType Name="loginfo">
           <Key>
             <PropertyRef Name="LogID" />
           </Key>
-          <Property Name="LogID" Type="uint" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="LogType" Type="char" Nullable="false" MaxLength="50" />
-          <Property Name="LogDesc" Type="varchar" Nullable="false" MaxLength="300" />
+          <Property Name="LogID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LogType" Type="char" MaxLength="50" Nullable="false" />
+          <Property Name="LogDesc" Type="varchar" MaxLength="300" Nullable="false" />
           <Property Name="LogUserID" Type="int" Nullable="false" />
-          <Property Name="LogUserName" Type="char" Nullable="false" MaxLength="50" />
-          <Property Name="LogDate" Type="timestamp" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="LogUserName" Type="char" MaxLength="50" Nullable="false" />
+          <Property Name="LogDate" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="navigationtree">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="uint" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="text" Type="char" Nullable="false" MaxLength="20" />
-          <Property Name="state" Type="char" Nullable="false" MaxLength="10" />
-          <Property Name="iconCls" Type="char" Nullable="false" MaxLength="20" />
-          <Property Name="url" Type="char" Nullable="false" MaxLength="50" />
+          <Property Name="id" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="text" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="state" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="iconCls" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="url" Type="char" MaxLength="50" Nullable="false" />
           <Property Name="nid" Type="uint" Nullable="false" />
           <Property Name="RoleID" Type="int" Nullable="false" />
         </EntityType>
@@ -37,16 +41,22 @@
           <Key>
             <PropertyRef Name="UserID" />
           </Key>
-          <Property Name="UserID" Type="uint" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="UserName" Type="char" Nullable="false" MaxLength="50" />
-          <Property Name="UserUint" Type="char" Nullable="false" MaxLength="100" />
-          <Property Name="UserDepartment" Type="char" Nullable="false" MaxLength="100" />
-          <Property Name="UserPwd" Type="char" Nullable="false" MaxLength="50" />
-          <Property Name="UserRole" Type="char" Nullable="false" MaxLength="100" />
-          <Property Name="UserStatus" Type="char" Nullable="false" MaxLength="10" />
-          <Property Name="UserCreateTime" Type="timestamp" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="char" MaxLength="50" Nullable="false" />
+          <Property Name="UserUint" Type="char" MaxLength="100" Nullable="false" />
+          <Property Name="UserDepartment" Type="char" MaxLength="100" Nullable="false" />
+          <Property Name="UserPwd" Type="char" MaxLength="50" Nullable="false" />
+          <Property Name="UserRole" Type="char" MaxLength="100" Nullable="false" />
+          <Property Name="UserStatus" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="UserCreateTime" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserRoleID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityContainer Name="CLModelStoreContainer">
+          <EntitySet Name="datadictionary" EntityType="Self.datadictionary" Schema="chailv" store:Type="Tables" />
+          <EntitySet Name="loginfo" EntityType="Self.loginfo" Schema="chailv" store:Type="Tables" />
+          <EntitySet Name="navigationtree" EntityType="Self.navigationtree" Schema="chailv" store:Type="Tables" />
+          <EntitySet Name="userinfo" EntityType="Self.userinfo" Schema="chailv" store:Type="Tables" />
+        </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -69,6 +79,7 @@
           <EntitySet Name="userinfo" EntityType="Self.userinfo" />
           <EntitySet Name="loginfo" EntityType="CLModel.loginfo" />
           <EntitySet Name="navigationtree" EntityType="CLModel.navigationtree" />
+          <EntitySet Name="datadictionary" EntityType="CLModel.DataDictionary" />
         </EntityContainer>
         <EntityType Name="loginfo">
           <Key>
@@ -92,6 +103,15 @@
           <Property Type="String" Name="url" Nullable="false" MaxLength="50" FixedLength="true" Unicode="false" />
           <Property Type="Int64" Name="nid" Nullable="false" />
           <Property Type="Int32" Name="RoleID" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DataDictionary">
+          <Key>
+            <PropertyRef Name="DataDictionaryID" />
+          </Key>
+          <Property Name="DataDictionaryID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DataDictionaryType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DataDictionaryValue" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="DataDictionaryDesc" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -136,6 +156,16 @@
                 <ScalarProperty Name="state" ColumnName="state" />
                 <ScalarProperty Name="text" ColumnName="text" />
                 <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="datadictionary">
+            <EntityTypeMapping TypeName="CLModel.DataDictionary">
+              <MappingFragment StoreEntitySet="datadictionary">
+                <ScalarProperty Name="DataDictionaryDesc" ColumnName="DataDictionaryDesc" />
+                <ScalarProperty Name="DataDictionaryValue" ColumnName="DataDictionaryValue" />
+                <ScalarProperty Name="DataDictionaryType" ColumnName="DataDictionaryType" />
+                <ScalarProperty Name="DataDictionaryID" ColumnName="DataDictionaryID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
