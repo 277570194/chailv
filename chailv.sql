@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50623
 File Encoding         : 65001
 
-Date: 2015-04-24 23:37:21
+Date: 2015-04-27 15:58:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,7 +25,7 @@ CREATE TABLE `datadictionary` (
   `DataDictionaryValue` char(255) NOT NULL DEFAULT '' COMMENT '数据字典值',
   `DataDictionaryDesc` char(255) DEFAULT NULL COMMENT '数据字典描述',
   PRIMARY KEY (`DataDictionaryID`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of datadictionary
@@ -86,6 +86,100 @@ INSERT INTO `navigationtree` VALUES ('11', '申请出差', 'open', '', 'CLReques
 INSERT INTO `navigationtree` VALUES ('12', '出差写实', 'open', '', 'CLReally', '10', '2');
 INSERT INTO `navigationtree` VALUES ('13', '申请报销', 'open', '', '', '10', '2');
 INSERT INTO `navigationtree` VALUES ('14', '基础数据管理', 'open', '', 'BaseDataManage', '1', '0');
+
+-- ----------------------------
+-- Table structure for travelfacejourney
+-- ----------------------------
+DROP TABLE IF EXISTS `travelfacejourney`;
+CREATE TABLE `travelfacejourney` (
+  `TravelFaceJourneyID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '出差行程ID',
+  `TFID` int(11) NOT NULL COMMENT '出差写实ID',
+  `TFJStartTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '出差行程开始时间',
+  `TFJEndTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '出差行程结束时间',
+  `TFJTrainNum` char(50) NOT NULL DEFAULT '' COMMENT '出差行程车次',
+  `TFJFrom` char(255) NOT NULL DEFAULT '' COMMENT '出差行程出发地',
+  `TFJTo` char(255) NOT NULL DEFAULT '' COMMENT '出差行程目的地',
+  `TFJExt1` char(255) DEFAULT NULL COMMENT '出差行程扩展1',
+  `TFJExt2` char(255) DEFAULT NULL COMMENT '出差行程扩展2',
+  `TFJExt3` char(255) DEFAULT NULL COMMENT '出差行程扩展3',
+  PRIMARY KEY (`TravelFaceJourneyID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of travelfacejourney
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for travelfact
+-- ----------------------------
+DROP TABLE IF EXISTS `travelfact`;
+CREATE TABLE `travelfact` (
+  `TravelFactID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '出差写实ID',
+  `TravelRequestID` int(11) NOT NULL COMMENT '出差申请ID',
+  `TFStartTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '出差实际开始时间',
+  `TFEndTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '出差实际结束时间',
+  `TFRange` char(50) NOT NULL DEFAULT '' COMMENT '出差实际范围',
+  `TFDays` decimal(5,2) NOT NULL DEFAULT '0.00' COMMENT '出差实际天数',
+  `TFJieSu` char(5) NOT NULL COMMENT '出差实际是否借宿',
+  `TFUnitEat` char(5) NOT NULL COMMENT '出差实际是否单位吃饭',
+  `TFArrangeShiSu` char(5) NOT NULL COMMENT '出差实际是否安排食宿',
+  `TFZhuSuCharge` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '出差实际住宿费用',
+  `TFTransportCharge` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '出差实际交通费用',
+  `TFTicketCharge` decimal(12,2) NOT NULL COMMENT '出差实际订票费',
+  `TFEatCharge` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '出差实际伙食补助费用',
+  `TFBusinessStatus` char(255) NOT NULL DEFAULT '' COMMENT '出差事件办理情况',
+  `TFDiffDesc` char(255) NOT NULL DEFAULT '' COMMENT '出差写实差异说明',
+  `TFExamineID` int(11) DEFAULT NULL COMMENT '出差写实审核人ID',
+  `TFExamineDesc` char(255) DEFAULT NULL COMMENT '出差写实审核意见',
+  `TFExamineTime` timestamp NULL DEFAULT NULL COMMENT '出差写实审核时间',
+  `TFStatus` char(25) NOT NULL DEFAULT '' COMMENT '出差写实状态',
+  `TFCreateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '出差写实创建时间',
+  `TFExt1` char(255) DEFAULT NULL COMMENT '出差写实扩展1',
+  `TFExt2` char(255) DEFAULT NULL COMMENT '出差写实扩展2',
+  `TFExt3` char(255) DEFAULT NULL COMMENT '出差写实扩展3',
+  PRIMARY KEY (`TravelFactID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of travelfact
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for travelrequest
+-- ----------------------------
+DROP TABLE IF EXISTS `travelrequest`;
+CREATE TABLE `travelrequest` (
+  `TravelRequestID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '出差申请ID',
+  `UserInfoID` int(11) NOT NULL COMMENT '申请人ID',
+  `TravelRange` char(50) NOT NULL DEFAULT '' COMMENT '出差范围',
+  `TravelType` char(100) NOT NULL DEFAULT '' COMMENT '出差类型',
+  `TravelFrom` char(255) NOT NULL DEFAULT '' COMMENT '出差出发地',
+  `TravelTo` char(255) NOT NULL DEFAULT '' COMMENT '出差目的地',
+  `TravelTimeStart` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '出差申请开始时间',
+  `TravelTimeEnd` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '出差申请结束时间',
+  `TravelDays` decimal(5,2) NOT NULL DEFAULT '0.00' COMMENT '出差天数',
+  `TravelJieSu` char(5) NOT NULL DEFAULT '' COMMENT '是否借宿',
+  `TravelUnitEat` char(5) NOT NULL DEFAULT '' COMMENT '是否在单位吃饭',
+  `TravelArrangeShiSu` char(5) NOT NULL DEFAULT '' COMMENT '是否安排食宿',
+  `TravelTransportation` char(100) NOT NULL DEFAULT '' COMMENT '出差交通工具',
+  `TravelAim` char(255) NOT NULL DEFAULT '' COMMENT '出差目的',
+  `TravelZhuSuCharge` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '预计住宿费用',
+  `TravelEatCharge` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '预计伙食费用',
+  `TravelTransportCharge` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '预计交通费用',
+  `TravelExamineID` int(11) DEFAULT NULL COMMENT '出差申请审核人ID',
+  `TravelExamineDesc` char(255) DEFAULT NULL COMMENT '出差申请审核意见',
+  `TravelExamineTime` timestamp NULL DEFAULT NULL COMMENT '出差申请审核时间',
+  `TravelStatus` char(25) NOT NULL DEFAULT '' COMMENT '出差申请状态',
+  `TravelCreateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '出差申请创建时间',
+  `TravelExt1` char(255) DEFAULT NULL COMMENT '出差申请扩展1',
+  `TravelExt2` char(255) DEFAULT NULL COMMENT '出差申请扩展2',
+  `TravelExt3` char(255) DEFAULT NULL COMMENT '出差申请扩展3',
+  PRIMARY KEY (`TravelRequestID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of travelrequest
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for userinfo
